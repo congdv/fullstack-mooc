@@ -1,32 +1,72 @@
 import React,{useState} from 'react'
+import personServices from '../services/person';
 
-const PersonForm = ({persons,setToPersons}) => {
-    const [newPerson, setNewPerson] = useState({newName:'',newPhoneNumber:''});
+const PersonForm = ({persons,setToPersons,setToNotificationMessage,setToIsErrMessage}) => {
+    const [newPerson, setNewPerson] = useState({newName:'',newNumber:''});
     
     const handleNameOnChange = (event) => {
-        console.log(event.target.value);
         setNewPerson({...newPerson, newName:event.target.value});
       }
     
     const handlePhoneNumberOnChange = (event) => {
-        console.log(event.target.value);
-        setNewPerson({...newPerson, newPhoneNumber:event.target.value});
+        setNewPerson({...newPerson, newNumber:event.target.value});
     }
     
-    const nameIsExist = () => {
-        const nameList = persons.filter( person => person.name === newPerson.newName);
-        console.log(nameList);
-        return nameList.length !== 0;
+    const foundPerson = () => {
+        return persons.find(person => person.name.toLowerCase() === newPerson.newName.toLowerCase());
     }
     const addPerson = (event) => {
         event.preventDefault();
-        
-        if(nameIsExist()){
-          alert(`${newPerson.newName} is already added to phonebook`);
+        const existedPerson = foundPerson();
+        if(typeof existedPerson !== 'undefined'){
+          const message = `${newPerson.newName} is already added to phonebook, replace the old number with a new one?`;
+          const result = window.confirm(message);
+          if (result){
+            const changedPerson = {...existedPerson,number:newPerson.newNumber};
+            personServices.update(existedPerson.id,changedPerson)
+            .then(returnedPerson => {
+              setToPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
+              setToNotificationMessage(`${returnedPerson.name} has been updated new number`);
+              setToIsErrMessage(false);
+              setTimeout(() => {
+                setToNotificationMessage(null);
+                setToIsErrMessage(false);
+              },3000)
+              
+            })
+            .catch( error => {
+              // alert(`${existedPerson} was removed on server`);
+              setToPersons(persons.filter(person => person.id !== existedPerson.id));
+              
+              setToNotificationMessage(`Information of ${existedPerson.name} has already been removed from server`);
+              setToIsErrMessage(true);
+
+              setTimeout(() => {
+                setToNotificationMessage(null);
+                setToIsErrMessage(false);
+              },3000)
+              
+            });
+
+            console.log("update");
+            
+            setNewPerson({newName:'',newNumber:''});
+          }
         }else {
-          const nameObj = {name:newPerson.newName,phoneNumber:newPerson.newPhoneNumber};
-          setToPersons(persons.concat(nameObj));
-          setNewPerson({newName:'',newPhoneNumber:''})
+          const personObj = {name:newPerson.newName,number:newPerson.newNumber,id:persons.length+1};
+          personServices.create(personObj).then(
+              returnedPerson => {
+                setToPersons(persons.concat(returnedPerson))
+                setToNotificationMessage(`Added ${personObj.name}`);
+                setToIsErrMessage(false);
+
+                setTimeout(() => {
+                  setToNotificationMessage(null);
+                  setToIsErrMessage(false);
+                },3000)
+              }
+            );
+          setNewPerson({newName:'',newNumber:''});
         }
       }
 
@@ -36,7 +76,7 @@ const PersonForm = ({persons,setToPersons}) => {
           name: <input value={newPerson.newName} onChange={handleNameOnChange} />
         </div>
         <div>
-          number: <input value={newPerson.newPhoneNumber} onChange={handlePhoneNumberOnChange}/>
+          number: <input value={newPerson.newNumber} onChange={handlePhoneNumberOnChange}/>
         </div>
         <div>
           <button type="submit">Add</button>

@@ -3,7 +3,7 @@ import React,{useState} from 'react';
 import Person from './Person'
 
 const Filter = ({persons}) => {
-    const [filterPersons, setFilterPerson] = useState([{name:'', phoneNumber:''}]);
+    const [filterPersons, setFilterPerson] = useState([{name:'', number:''}]);
     const filterRows = filterPersons.map(person => <Person key={person.name} person={person} />);
 
 
@@ -13,7 +13,7 @@ const Filter = ({persons}) => {
         
         //Cannot find name of this person
         if(filterList.length < 1){
-          setFilterPerson([{name:'', phoneNumber:''}])
+          setFilterPerson([{name:'', number:''}])
         } else {
           setFilterPerson(filterList);
         }
