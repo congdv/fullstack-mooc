@@ -1,7 +1,7 @@
 import React from 'react';
 import personServices from '../services/person';
 
-const Person = ({person,persons,setToPersons,setToNotificationMessage,setToIsErrMessage}) => {
+const Person = ({person,persons,setToPersons,setToNotificationMessage,setToIsErrMessage,isFilter}) => {
     const handleDeletePerson = (event) => {
         event.preventDefault();
         const result = window.confirm(`Delete ${person.name}`);
@@ -9,7 +9,7 @@ const Person = ({person,persons,setToPersons,setToNotificationMessage,setToIsErr
             console.log(`Delete ${person.name}`);
             personServices.deleteAPerson(person.id).then(() => {
                 setToNotificationMessage(`Deleted ${person.name}`);
-                setToIsErrMessage(true);
+                setToIsErrMessage(false);
 
                 setTimeout(() => {
                     setToNotificationMessage(null);
@@ -30,7 +30,7 @@ const Person = ({person,persons,setToPersons,setToNotificationMessage,setToIsErr
         }
     }
     return (
-        <li key={person.id}>{person.name} {person.number} <button onClick={handleDeletePerson}>delete</button></li>
+        <li key={person.id}>{person.name} {person.number} {isFilter ? "" : <button onClick={handleDeletePerson}>delete</button>}</li>
     )
 }
 

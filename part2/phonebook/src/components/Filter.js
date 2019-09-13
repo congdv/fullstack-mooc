@@ -4,7 +4,7 @@ import Person from './Person'
 
 const Filter = ({persons}) => {
     const [filterPersons, setFilterPerson] = useState([{name:'', number:''}]);
-    const filterRows = filterPersons.map(person => <Person key={person.name} person={person} />);
+    const filterRows = filterPersons.map(person => <Person key={person.name} person={person} isFilter={true} />);
 
 
     const handleFilterOnChange = (event) => {
