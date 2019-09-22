@@ -1,0 +1,25 @@
+{
+  "name": "bloglist",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --verbose",
+    "watch": "nodemon index.js",
+    "lint": "eslint ."
+  },
+  "author": "Cong Dao",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.2"
+  }
+}

@@ -35,16 +35,16 @@ const PersonForm = ({persons,setToPersons,setToNotificationMessage,setToIsErrMes
               
             })
             .catch( error => {
-              // alert(`${existedPerson} was removed on server`);
-              setToPersons(persons.filter(person => person.id !== existedPerson.id));
+              // setToPersons(persons.filter(person => person.id !== existedPerson.id));
               
-              setToNotificationMessage(`Information of ${existedPerson.name} has already been removed from server`);
+              setToNotificationMessage(error.response.data.error);
               setToIsErrMessage(true);
 
               setTimeout(() => {
                 setToNotificationMessage(null);
                 setToIsErrMessage(false);
-              },3000)
+              },5000)
+              console.log("ERRorrr "+ error.response.data.error)
               
             });
 
@@ -65,7 +65,17 @@ const PersonForm = ({persons,setToPersons,setToNotificationMessage,setToIsErrMes
                   setToIsErrMessage(false);
                 },3000)
               }
-            );
+            )
+            .catch(error => {
+              setToNotificationMessage(error.response.data.error);
+              setToIsErrMessage(true);
+
+              setTimeout(() => {
+                setToNotificationMessage(null);
+                setToIsErrMessage(false);
+              },5000)
+              console.log("ERRorrr "+ error.response.data.error)
+            });
           setNewPerson({newName:'',newNumber:''});
         }
       }
