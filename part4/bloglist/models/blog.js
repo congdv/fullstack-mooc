@@ -1,31 +1,35 @@
 const moongose = require("mongoose");
 
 const blogSchema = new moongose.Schema({
-    title: {
-        type: String,
-        minlength: 5,
-        required: true
-    },
-    authors :{
-        type: String,
-        minlength: 3,
-    },
-    url : {
-        type: String,
-        minlength: 3,
-        required: true
-    }, 
-    likes : {
-        type: Number
-    }
+  title: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
+  author :{
+    type: String,
+    minlength: 3,
+  },
+  url : {
+    type: String,
+    minlength: 3,
+    required: true
+  },
+  likes : {
+    type: Number
+  },
+  user: {
+    type: moongose.Schema.Types.ObjectId,
+    ref: "User"
+  }
 });
 
 blogSchema.set("toJSON", {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject.__v;
-      }
-})
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  }
+});
 
 module.exports = moongose.model("Blog", blogSchema);
