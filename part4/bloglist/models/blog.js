@@ -21,7 +21,13 @@ const blogSchema = new moongose.Schema({
   user: {
     type: moongose.Schema.Types.ObjectId,
     ref: "User"
-  }
+  },
+  comments: [
+    {
+      type: moongose.Schema.Types.ObjectId,
+      ref: "Comment"
+    }
+  ]
 });
 
 blogSchema.set("toJSON", {
